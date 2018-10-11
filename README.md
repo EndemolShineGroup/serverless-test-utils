@@ -10,6 +10,7 @@
 [![Test Coverage][icon-coverage]][link-coverage]
 [![Jest][icon-jest]][link-jest]
 
+[![Serverless][icon-serverless]][link-serverless]
 [![Commitizen][icon-commitizen]][link-commitizen]
 [![Semantic Release][icon-semantic-release]][link-semantic-release]
 [![Prettier][icon-prettier]][link-prettier]
@@ -24,7 +25,8 @@ yarn add @endemolshinegroup/serverless-test-utils
 
 ## Usage
 
-
+This project exports the Serverless Framework's own testing utilities so you
+can use them to test your own projects.
 
 ### Example
 
@@ -75,6 +77,9 @@ describe('MyServerlessProject', () => {
 
 [icon-jest]: https://img.shields.io/badge/tested_with-jest-99424f.svg?longCache=true&style=flat-square
 [link-jest]: https://jestjs.io/
+
+[icon-serverless]: https://img.shields.io/badge/serverless-%E2%9A%A1%EF%B8%8F-555.svg?longCache=true&style=flat-square
+[link-serverless]: http://www.serverless.com
 
 [icon-commitizen]: https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?longCache=true&style=flat-square
 [link-commitizen]: http://commitizen.github.io/cz-cli/
