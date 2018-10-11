@@ -34,14 +34,18 @@ can use them to test your own projects.
 import fs from 'fs';
 import path from 'path';
 
-import { deploy, remove } from '@endemolshinegroup/serverless-test-utils';
+import { 
+  createTestService, 
+  deployService, 
+  removeService, 
+} from '@endemolshinegroup/serverless-test-utils';
 
 describe('MyServerlessProject', () => {
   let serviceName;
   
   beforeAll(() => {
-    serviceName = Utils.createTestService('aws-nodejs', process.cwd());
-    Utils.deployService();
+    serviceName = createTestService('aws-nodejs', process.cwd());
+    deployService();
   });
   
   it('should have create cloudformation files and functions zip', () => {
@@ -54,7 +58,7 @@ describe('MyServerlessProject', () => {
   });
   
   afterAll(() => {
-    Utils.removeService();
+    removeService();
   });
 });
 ```
