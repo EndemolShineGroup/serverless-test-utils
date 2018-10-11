@@ -179,8 +179,8 @@ module.exports = {
 
     const describeEndpointResponse = await Iot.describeEndpoint().promise();
     const IotData = new AWS.IotData({
-      region: 'us-east-1',
       endpoint: describeEndpointResponse.endpointAddress,
+      region: 'us-east-1',
     });
 
     const params = {
