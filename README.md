@@ -15,7 +15,8 @@
 [![Semantic Release][icon-semantic-release]][link-semantic-release]
 [![Prettier][icon-prettier]][link-prettier]
 
-Testing utilities for Serverless projects
+This project exports the Serverless Framework's own testing utilities so you
+can use them to test your own projects.
 
 ## Installation
 
@@ -25,8 +26,6 @@ yarn add @endemolshinegroup/serverless-test-utils
 
 ## Usage
 
-This project exports the Serverless Framework's own testing utilities so you
-can use them to test your own projects.
 
 ### Example
 
@@ -53,7 +52,6 @@ describe('MyServerlessProject', () => {
     expect(deployedFiles[0]).toEqual('cloudformation-template-create-stack.json');
     expect(deployedFiles[1]).toEqual('cloudformation-template-update-stack.json');
     expect(deployedFiles[2]).toEqual('serverless-state.json');
-    // Note: noticed the seconds section can vary a lot
     expect(deployedFiles[3]).toMatch(/test-[0-9]{1,}-[0-9]{1,}.zip/);
   });
   
