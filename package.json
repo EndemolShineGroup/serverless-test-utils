@@ -5,6 +5,11 @@
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "keywords": [
+    "serverless",
+    "serverless-framework",
+    "testing"
+  ],
   "author": {
     "name": "Endemol Shine Group Technology",
     "url": "https://github.com/EndemolShineGroup"
@@ -27,6 +32,9 @@
     "pretest": "rimraf coverage/",
     "test": "jest --no-cache",
     "semantic-release": "semantic-release"
+  },
+  "peerDependencies": {
+    "serverless": ">=1.20.0"
   },
   "dependencies": {
     "aws-sdk": "^2.332.0"
