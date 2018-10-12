@@ -1,7 +1,9 @@
 import crypto from 'crypto';
 import fs from 'fs';
+import yaml from 'js-yaml';
 import os from 'os';
 import path from 'path';
+
 const execSync = require('child_process').execSync;
 
 import AWS from 'aws-sdk';
@@ -56,7 +58,7 @@ export = {
     testStage = 'dev',
   ) => {
     const hrtime = process.hrtime();
-    const serviceName = `test-${hrtime[0]}-${hrtime[1]}`;
+    const testServiceName = `test-${hrtime[0]}-${hrtime[1]}`;
     const tmpDir = path.join(
       os.tmpdir(),
       'tmpdirs-serverless',
@@ -67,6 +69,11 @@ export = {
     fse.mkdirsSync(tmpDir);
     process.chdir(tmpDir);
 
+    const serverlessConfig = yaml.safeLoad(
+      fse.readFileSync(path.join(testServiceDir, 'serverless.yml')),
+    );
+    const serviceName = serverlessConfig.service.name;
+
     // create a new Serverless service
     execSync(`${serverlessExec} create --template ${templateName}`, {
       stdio: 'inherit',
@@ -75,21 +82,24 @@ export = {
     if (testServiceDir) {
       fse.copySync(testServiceDir, tmpDir, {
         clobber: true,
+        filter: (src: string) => {
+          return !(src.includes('.git') || src.includes('.cache'));
+        },
         preserveTimestamps: true,
       });
     }
 
-    replaceTextInFile('serverless.yml', templateName, serviceName);
+    replaceTextInFile('serverless.yml', serviceName, testServiceName);
 
-    process.env.TOPIC_1 = `${serviceName}-1`;
-    process.env.TOPIC_2 = `${serviceName}-1`;
-    process.env.BUCKET_1 = `${serviceName}-1`;
-    process.env.BUCKET_2 = `${serviceName}-2`;
-    process.env.COGNITO_USER_POOL_1 = `${serviceName}-1`;
-    process.env.COGNITO_USER_POOL_2 = `${serviceName}-2`;
+    process.env.TOPIC_1 = `${testServiceName}-1`;
+    process.env.TOPIC_2 = `${testServiceName}-1`;
+    process.env.BUCKET_1 = `${testServiceName}-1`;
+    process.env.BUCKET_2 = `${testServiceName}-2`;
+    process.env.COGNITO_USER_POOL_1 = `${testServiceName}-1`;
+    process.env.COGNITO_USER_POOL_2 = `${testServiceName}-2`;
 
     // return the name of the CloudFormation stack
-    return `${serviceName}-${testStage}`;
+    return `${testServiceName}-${testStage}`;
   },
 
   createAndRemoveInBucket(bucketName: string) {
