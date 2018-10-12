@@ -1,13 +1,21 @@
+import { execSync } from 'child_process';
 import crypto from 'crypto';
 import fs from 'fs';
-import yaml from 'js-yaml';
 import os from 'os';
 import path from 'path';
 
-const execSync = require('child_process').execSync;
+import fse from 'fs-extra';
+import yaml from 'js-yaml';
 
-import AWS from 'aws-sdk';
-const fse = require('fs-extra');
+import listStackOutputs from './aws/cloudFormation/listStackOutputs';
+import putCloudWatchEvents from './aws/cloudWatch/putCloudWatchEvents';
+import createCognitoUser from './aws/cognitoUserPool/createCognitoUser';
+import getCognitoUserPoolId from './aws/cognitoUserPool/getCognitoUserPoolId';
+import publishIotData from './aws/iot/publishIotData';
+import createAndRemoveInBucket from './aws/s3/createAndRemoveInBucket';
+import createSnsTopic from './aws/sns/createSnsTopic';
+import publishSnsMessage from './aws/sns/publishSnsMessage';
+import removeSnsTopic from './aws/sns/removeSnsTopic';
 
 // mock to test functionality bound to a serverless plugin
 class ServerlessPlugin {
@@ -50,6 +58,21 @@ export = {
   replaceTextInFile,
   serverlessExec,
 
+  listStackOutputs,
+
+  putCloudWatchEvents,
+
+  createCognitoUser,
+  getCognitoUserPoolId,
+
+  publishIotData,
+
+  createAndRemoveInBucket,
+
+  createSnsTopic,
+  publishSnsMessage,
+  removeSnsTopic,
+
   ServerlessPlugin,
 
   createTestService: (
@@ -70,7 +93,9 @@ export = {
     process.chdir(tmpDir);
 
     const serverlessConfig = yaml.safeLoad(
-      fse.readFileSync(path.join(testServiceDir, 'serverless.yml')),
+      fse
+        .readFileSync(path.join(testServiceDir, 'serverless.yml'))
+        .toString('utf8'),
     );
     const serviceName = serverlessConfig.service.name;
 
@@ -81,52 +106,18 @@ export = {
 
     if (testServiceDir) {
       fse.copySync(testServiceDir, tmpDir, {
-        clobber: true,
         filter: (src: string) => {
           return !(src.includes('.git') || src.includes('.cache'));
         },
+        overwrite: true,
         preserveTimestamps: true,
       });
     }
 
     replaceTextInFile('serverless.yml', serviceName, testServiceName);
 
-    process.env.TOPIC_1 = `${testServiceName}-1`;
-    process.env.TOPIC_2 = `${testServiceName}-1`;
-    process.env.BUCKET_1 = `${testServiceName}-1`;
-    process.env.BUCKET_2 = `${testServiceName}-2`;
-    process.env.COGNITO_USER_POOL_1 = `${testServiceName}-1`;
-    process.env.COGNITO_USER_POOL_2 = `${testServiceName}-2`;
-
     // return the name of the CloudFormation stack
     return `${testServiceName}-${testStage}`;
-  },
-
-  createAndRemoveInBucket(bucketName: string) {
-    const S3 = new AWS.S3({ region: 'us-east-1' });
-
-    const params = {
-      Body: 'hello world',
-      Bucket: bucketName,
-      Key: 'object',
-    };
-
-    return S3.putObject(params)
-      .promise()
-      .then(() => {
-        delete params.Body;
-        return S3.deleteObject(params).promise();
-      });
-  },
-
-  createSnsTopic(topicName: string) {
-    const SNS = new AWS.SNS({ region: 'us-east-1' });
-
-    const params = {
-      Name: topicName,
-    };
-
-    return SNS.createTopic(params).promise();
   },
 
   installPlugin: <T extends any>(installDir: string, PluginClass: T) => {
@@ -144,125 +135,10 @@ export = {
     );
   },
 
-  async removeSnsTopic(topicName: string) {
-    const SNS = new AWS.SNS({ region: 'us-east-1' });
-
-    const listTopicsResponse = await SNS.listTopics().promise();
-    if (!listTopicsResponse || !listTopicsResponse.Topics) {
-      throw new Error('No topics found');
-    }
-
-    const topic = listTopicsResponse.Topics.find((retrievedTopic) => {
-      return RegExp(topicName, 'g').test(retrievedTopic.TopicArn as string);
-    });
-
-    const params = {
-      TopicArn: topic!.TopicArn as string,
-    };
-
-    return SNS.deleteTopic(params).promise();
-  },
-
-  async publishSnsMessage(topicName: string, message: string) {
-    const SNS = new AWS.SNS({ region: 'us-east-1' });
-
-    const listTopicsResponse = await SNS.listTopics().promise();
-
-    if (!listTopicsResponse || !listTopicsResponse.Topics) {
-      throw new Error('No topics found');
-    }
-
-    const topic = listTopicsResponse.Topics.find((retrievedTopic) => {
-      return RegExp(topicName, 'g').test(retrievedTopic.TopicArn as string);
-    });
-
-    const params = {
-      Message: message,
-      TopicArn: topic!.TopicArn,
-    };
-
-    return SNS.publish(params).promise();
-  },
-
-  async publishIotData(topic: string, message: string) {
-    const Iot = new AWS.Iot({ region: 'us-east-1' });
-
-    const describeEndpointResponse = await Iot.describeEndpoint().promise();
-    const IotData = new AWS.IotData({
-      endpoint: describeEndpointResponse.endpointAddress,
-      region: 'us-east-1',
-    });
-
-    const params = {
-      payload: new Buffer(message),
-      topic,
-    };
-
-    return IotData.publish(params).promise();
-  },
-
-  async putCloudWatchEvents(sources: string[]) {
-    const cwe = new AWS.CloudWatchEvents({ region: 'us-east-1' });
-
-    const entries = sources.map((source) => {
-      return {
-        Detail: '{ "key1": "value1" }',
-        DetailType: 'serverlessDetailType',
-        Source: source,
-      };
-    });
-
-    const params = {
-      Entries: entries,
-    };
-
-    return cwe.putEvents(params).promise();
-  },
-
-  async getCognitoUserPoolId(userPoolName: string) {
-    const cisp = new AWS.CognitoIdentityServiceProvider({
-      region: 'us-east-1',
-    });
-
-    const params = {
-      MaxResults: 50,
-    };
-
-    const listUserPoolsResponse = await cisp.listUserPools(params).promise();
-    if (!listUserPoolsResponse || !listUserPoolsResponse.UserPools) {
-      return false;
-    }
-
-    const retrievedUserPool = listUserPoolsResponse.UserPools.find(
-      (userPool) => {
-        return RegExp(userPoolName, 'g').test(userPool.Name as string);
-      },
-    );
-
-    if (!retrievedUserPool) {
-      throw new Error(`Unable to find Cognito User Pool ${userPoolName}`);
-    }
-
-    return retrievedUserPool.Id;
-  },
-
-  createCognitoUser(userPoolId: string, username: string, password: string) {
-    const cisp = new AWS.CognitoIdentityServiceProvider({
-      region: 'us-east-1',
-    });
-
-    const params = {
-      TemporaryPassword: password,
-      UserPoolId: userPoolId,
-      Username: username,
-    };
-    return cisp.adminCreateUser(params).promise();
-  },
-
   getFunctionLogs(functionName: string) {
     const logs = execSync(
       `${serverlessExec} logs --function ${functionName} --noGreeting true`,
-    );
+    ).toString('utf8');
     const logsString = new Buffer(logs, 'base64').toString();
     process.stdout.write(logsString);
     return logsString;
