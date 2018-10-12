@@ -42,7 +42,7 @@ const replaceTextInFile = (
   fs.writeFileSync(filePath, fileContent.replace(subString, newSubString));
 };
 
-module.exports = {
+export = {
   getTmpDirPath,
   getTmpFilePath,
   replaceTextInFile,
