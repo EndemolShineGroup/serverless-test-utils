@@ -26,27 +26,26 @@ yarn add @endemolshinegroup/serverless-test-utils
 
 ## Usage
 
-
 ### Example
 
 ```typescript
 import fs from 'fs';
 import path from 'path';
 
-import { 
-  createTestService, 
-  deployService, 
-  removeService, 
+import {
+  createTestService,
+  deployService,
+  removeService,
 } from '@endemolshinegroup/serverless-test-utils';
 
 describe('MyServerlessProject', () => {
   let serviceName;
-  
+
   beforeAll(() => {
     serviceName = createTestService('aws-nodejs', process.cwd());
     deployService();
   });
-  
+
   it('should have create cloudformation files and functions zip', () => {
     const deployedFiles = fs.readdirSync(path.join(process.cwd(), '.serverless'));
     expect(deployedFiles[0]).toEqual('cloudformation-template-create-stack.json');
@@ -54,7 +53,7 @@ describe('MyServerlessProject', () => {
     expect(deployedFiles[2]).toEqual('serverless-state.json');
     expect(deployedFiles[3]).toMatch(/test-[0-9]{1,}-[0-9]{1,}.zip/);
   });
-  
+
   afterAll(() => {
     removeService();
   });
