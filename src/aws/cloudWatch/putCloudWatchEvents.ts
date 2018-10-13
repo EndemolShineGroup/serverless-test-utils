@@ -1,8 +1,7 @@
 import AWS from 'aws-sdk';
 
-const cloudwatchEvents = new AWS.CloudWatchEvents();
-
 export default (sources: string[]) => {
+  const cloudwatchEvents = new AWS.CloudWatchEvents();
   const entries = sources.map((source) => {
     return {
       Detail: '{ "key1": "value1" }',

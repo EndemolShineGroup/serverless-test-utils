@@ -1,8 +1,8 @@
 import AWS from 'aws-sdk';
 
-const iot = new AWS.Iot();
-
 export default async (topic: string, message: string) => {
+  const iot = new AWS.Iot();
+
   const describeEndpointResponse = await iot.describeEndpoint().promise();
   const IotData = new AWS.IotData({
     endpoint: describeEndpointResponse.endpointAddress,

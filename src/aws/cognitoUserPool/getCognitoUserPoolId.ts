@@ -1,8 +1,8 @@
 import AWS from 'aws-sdk';
 
-const cognito = new AWS.CognitoIdentityServiceProvider();
-
 export default async (userPoolName: string) => {
+  const cognito = new AWS.CognitoIdentityServiceProvider();
+
   const params = {
     MaxResults: 50,
   };

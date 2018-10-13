@@ -1,12 +1,12 @@
-import CloudFormation from 'aws-sdk/clients/cloudformation';
-
-const cloudformation = new CloudFormation();
+import AWS from 'aws-sdk';
 
 /**
  * This functions lists any stack outputs
  * @param stackName
  */
 export default async (stackName: string) => {
+  const cloudformation = new AWS.CloudFormation();
+
   const response = await cloudformation
     .describeStacks({ StackName: stackName })
     .promise();

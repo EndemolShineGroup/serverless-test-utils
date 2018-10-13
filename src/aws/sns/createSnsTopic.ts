@@ -1,8 +1,8 @@
 import AWS from 'aws-sdk';
 
-const sns = new AWS.SNS();
-
 export default async (topicName: string) => {
+  const sns = new AWS.SNS();
+
   const params = {
     Name: topicName,
   };

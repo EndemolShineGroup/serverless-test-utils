@@ -1,4 +1,4 @@
-const Serverless = require('serverless/lib/Serverless');
+import Serverless from 'serverless';
 
 const testUtils = require('.');
 
@@ -26,8 +26,8 @@ describe('Test utils', () => {
 
       const serverless = new Serverless();
       const options = {
-        stage: 'production',
         region: 'my-test-region',
+        stage: 'production',
       };
       const functionUnderTest = () => Promise.resolve('function under test');
 

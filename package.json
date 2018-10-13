@@ -51,6 +51,7 @@
     "@types/jest": "^23",
     "@types/js-yaml": "^3.11.2",
     "@types/node": "^10",
+    "aws-sdk-mock": "^4.2.0",
     "commitizen": "^3.0.2",
     "husky": "^1",
     "jest": "^23",
