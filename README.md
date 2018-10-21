@@ -21,7 +21,7 @@ can use them to test your own projects.
 ## Installation
 
 ```bash
-yarn add @endemolshinegroup/serverless-test-utils
+yarn add -D @endemolshinegroup/serverless-test-utils
 ```
 
 ## Usage
