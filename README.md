@@ -1,4 +1,4 @@
-# @endemolshinegroup/serverless-test-utils
+![Banner][icon-banner]
 
 [![MIT Licensed][icon-license]][link-license]
 [![NPM Version][icon-npm]][link-npm]
@@ -59,6 +59,8 @@ describe('MyServerlessProject', () => {
   });
 });
 ```
+
+[icon-banner]: docs/assets/banner.png
 
 [icon-license]: https://img.shields.io/github/license/EndemolShineGroup/serverless-test-utils.svg?longCache=true&style=flat-square
 [link-license]: LICENSE
