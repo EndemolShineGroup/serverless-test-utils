@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/EndemolShineGroup/serverless-test-utils/compare/v1.0.1...v1.0.2) (2018-11-03)
+
+
+### Bug Fixes
+
+* replace service name correctly ([c63f80d](https://github.com/EndemolShineGroup/serverless-test-utils/commit/c63f80d))
+
 ## [1.0.1](https://github.com/EndemolShineGroup/serverless-test-utils/compare/v1.0.0...v1.0.1) (2018-10-12)
 
 
