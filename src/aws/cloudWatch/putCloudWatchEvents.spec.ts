@@ -5,7 +5,7 @@ MockAWS.setSDKInstance(AWS);
 
 import putCloudWatchEvents from './putCloudWatchEvents';
 
-describe('putCloudWatchEvents', () => {
+describe('#putCloudWatchEvents', () => {
   beforeAll(() => {
     MockAWS.mock(
       'CloudWatchEvents',

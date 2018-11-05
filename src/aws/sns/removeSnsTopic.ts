@@ -12,8 +12,12 @@ export default async (topicName: string) => {
     return RegExp(topicName, 'g').test(retrievedTopic.TopicArn as string);
   });
 
+  if (!topic) {
+    throw new Error(`Unable to find SNS Topic ${topicName}`);
+  }
+
   const params = {
-    TopicArn: topic!.TopicArn as string,
+    TopicArn: topic.TopicArn as string,
   };
 
   return sns.deleteTopic(params).promise();

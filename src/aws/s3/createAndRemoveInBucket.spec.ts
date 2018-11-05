@@ -5,7 +5,7 @@ MockAWS.setSDKInstance(AWS);
 
 import createAndRemoveInBucket from './createAndRemoveInBucket';
 
-describe('createAndRemoveInBucket', () => {
+describe('#createAndRemoveInBucket', () => {
   beforeAll(() => {
     MockAWS.mock('S3', 'putObject', (params: any, callback: Function) => {
       callback(null, {

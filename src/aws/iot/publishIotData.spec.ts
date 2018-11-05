@@ -5,7 +5,7 @@ MockAWS.setSDKInstance(AWS);
 
 import publishIotData from './publishIotData';
 
-describe('publishIotData', () => {
+describe('#publishIotData', () => {
   beforeAll(() => {
     MockAWS.mock('Iot', 'describeEndpoint', (callback: Function) => {
       callback(null, {

@@ -9,7 +9,7 @@ const FIXTURE = {
   TopicArn: 'arn:aws:sns:*:123456789012:myTopic',
 };
 
-describe('createSnsTopic', () => {
+describe('#createSnsTopic', () => {
   beforeAll(() => {
     MockAWS.mock('SNS', 'createTopic', (params: any, callback: Function) => {
       callback(null, FIXTURE);

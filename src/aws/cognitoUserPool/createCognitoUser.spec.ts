@@ -5,7 +5,7 @@ MockAWS.setSDKInstance(AWS);
 
 import createCognitoUser from './createCognitoUser';
 
-describe('createCognitoUser', () => {
+describe('#createCognitoUser', () => {
   beforeAll(() => {
     MockAWS.mock(
       'CognitoIdentityServiceProvider',

@@ -12,7 +12,7 @@ export default async (stackName: string) => {
     .promise();
 
   if (!response.Stacks) {
-    throw new Error(`No stack found with name ${stackName}`);
+    throw new Error(`No stacks found`);
   }
 
   const retrievedStack = response.Stacks.find((stack) => {

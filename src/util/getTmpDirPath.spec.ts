@@ -1,6 +1,6 @@
 import getTmpDirPath from './getTmpDirPath';
 
-describe('getTmpDirPath()', () => {
+describe('#getTmpDirPath()', () => {
   it('should return a valid tmpDir path', () => {
     const tmpDirPath = getTmpDirPath();
 
