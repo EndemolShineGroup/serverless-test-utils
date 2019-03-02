@@ -51,7 +51,7 @@
     "@semantic-release/git": "^7",
     "@types/jest": "^23",
     "@types/js-yaml": "^3.11.2",
-    "@types/node": "^10",
+    "@types/node": "^11.10.1",
     "@types/serverless": "^1.18.0",
     "aws-sdk-mock": "^4.2.0",
     "commitizen": "^3.0.2",
