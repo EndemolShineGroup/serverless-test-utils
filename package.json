@@ -54,7 +54,7 @@
     "@types/node": "^10",
     "@types/serverless": "^1.18.0",
     "aws-sdk-mock": "^4.2.0",
-    "commitizen": "^3.0.2",
+    "commitizen": "^4.0.0",
     "husky": "^1",
     "jest": "^23",
     "lint-staged": "^8.0.0",
